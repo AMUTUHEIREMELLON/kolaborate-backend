@@ -28,13 +28,18 @@ exports.getAllProfiles = async (req, res) => {
 exports.searchProfiles = async (req, res) => {
   try {
     const { skills } = req.query;
-    const query = skills ? { skills: { $in: skills.split(',') } } : {};
+    let query = {};
+    if (skills) {
+      const arr = skills.split(',').map(s => s.trim()).filter(Boolean);
+      query = { skills: { $in: arr } };
+    }
     const profiles = await Profile.find(query);
     res.json(profiles);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getProfileById = async (req, res) => {
   try {
@@ -48,6 +53,7 @@ exports.getProfileById = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
+    console.log('PUT body:', req.body);
     const profile = await Profile.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!profile) return res.status(404).json({ error: 'Profile not found' });
     res.json(profile);

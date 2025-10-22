@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../controllers/profileController');
+const { validateProfile } = require('../middleware/validate'); 
 
-router.post('/api/profiles', profileController.createProfile); 
-router.get('/api/profiles', profileController.getAllProfiles);
-router.get('/api/profiles/search', profileController.searchProfiles); 
-router.get('/api/profiles/:id', profileController.getProfileById);
-router.put('/api/profiles/:id', profileController.updateProfile);
+router.post('/', profileController.createProfile);
+router.get('/', profileController.getAllProfiles);
+router.get('/search', profileController.searchProfiles);
+router.get('/:id', profileController.getProfileById);
+router.put('/:id', profileController.updateProfile);
 
 module.exports = router;
