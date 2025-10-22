@@ -10,14 +10,16 @@ exports.createProfile = async (req, res) => {
   }
 };
 
-exports.getProfiles = async (req, res) => {
+exports.getAllProfiles = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+
     const profiles = await Profile.find().skip(skip).limit(limit);
     const total = await Profile.countDocuments();
-    res.json({ profiles, total, page, pages: Math.ceil(total / limit) });
+
+    res.status(200).json({ profiles, total });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
